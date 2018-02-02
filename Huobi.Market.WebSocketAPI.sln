@@ -1,0 +1,28 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huobi.Market.WebSocketAPI", "Huobi.Market.WebSocketAPI\Huobi.Market.WebSocketAPI.csproj", "{609CCADD-CD92-49FC-AD8E-41B7B989466E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Huobi.Market.WebSocketAPITests", "Huobi.Market.WebSocketAPITests\Huobi.Market.WebSocketAPITests.csproj", "{DC5741EC-CB45-4925-B385-BADD91753B1D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{609CCADD-CD92-49FC-AD8E-41B7B989466E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{609CCADD-CD92-49FC-AD8E-41B7B989466E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{609CCADD-CD92-49FC-AD8E-41B7B989466E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{609CCADD-CD92-49FC-AD8E-41B7B989466E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DC5741EC-CB45-4925-B385-BADD91753B1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC5741EC-CB45-4925-B385-BADD91753B1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC5741EC-CB45-4925-B385-BADD91753B1D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC5741EC-CB45-4925-B385-BADD91753B1D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
