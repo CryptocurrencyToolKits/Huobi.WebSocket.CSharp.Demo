@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using WebSocket4Net;
 
@@ -13,7 +14,7 @@ namespace Huobi.Market.WebSocketAPI
         private static WebSocket websocket;
         private static Dictionary<string, string> topicDic = new Dictionary<string, string>();
         private static bool isOpened = false;
-        private const string HUOBI_WEBSOCKET_API = "ws://api.huobi.pro/ws";
+        private const string HUOBI_WEBSOCKET_API = "wss://api.huobi.pro/ws";
         #endregion
 
         public const string MARKET_KLINE = "market.{0}.kline.{1}";
@@ -21,6 +22,7 @@ namespace Huobi.Market.WebSocketAPI
         public const string MARKET_TRADE_DETAIL = "market.{0}.trade.detail";
         public const string MARKET_DETAIL = "market.{0}.detail";
         public static event EventHandler<HuoBiMessageReceivedEventArgs> OnMessage;
+        public static bool IsHandClose = false;
         /// <summary>
         /// 初始化WebSocket
         /// </summary>
@@ -29,14 +31,19 @@ namespace Huobi.Market.WebSocketAPI
         {
             try
             {
-                websocket = new WebSocket(HUOBI_WEBSOCKET_API);
-
-                websocket.Error += (sender, e) =>
+                if (websocket == null)
                 {
-                    Console.WriteLine("Error:" + e.Exception.Message.ToString());
-                };
-                websocket.DataReceived += ReceviedMsg;
-                websocket.Opened += OnOpened;
+                    websocket = new WebSocket(HUOBI_WEBSOCKET_API);
+
+                    websocket.Error += (sender, e) =>
+                    {
+                        Console.WriteLine("Error:" + e.Exception.Message.ToString());
+                    };
+                    websocket.DataReceived += (ReceviedMsg);
+                    websocket.Opened += OnOpened;
+                    //websocket.Closed += OnClosed;
+                }
+
                 websocket.Open();
 
             }
@@ -46,7 +53,15 @@ namespace Huobi.Market.WebSocketAPI
             }
             return true;
         }
-
+        public static void OnClosed(object sender, EventArgs e)
+        {
+            if (!IsHandClose)
+            {
+                Thread.Sleep(10000);
+                Init();
+            }
+            IsHandClose = false;
+        }
 
         #region Opened&心跳响应&触发消息事件
         public static void OnOpened(object sender, EventArgs e)
@@ -59,7 +74,10 @@ namespace Huobi.Market.WebSocketAPI
             }
 
         }
-
+        public static void Send(string msg)
+        {
+            websocket.Send(msg);
+        }
         /// <summary>
         /// 响应心跳包
         /// </summary>
@@ -68,15 +86,16 @@ namespace Huobi.Market.WebSocketAPI
         public static void ReceviedMsg(object sender, DataReceivedEventArgs args)
         {
             var msg = GZipHelper.GZipDecompressString(args.Data);
-            if (msg.IndexOf("ping") != -1) //响应心跳包
-            {
-                var reponseData = msg.Replace("ping", "pong");
-                websocket.Send(reponseData);
-            }
-            else//接收消息
-            {
-                OnMessage?.Invoke(null, new HuoBiMessageReceivedEventArgs(msg));
-            }
+            //if (msg.IndexOf("ping") != -1) //响应心跳包
+            //{
+            //    var reponseData = msg.Replace("ping", "pong");
+            //    websocket.Send(reponseData);
+            //}
+            //else//接收消息
+            //{
+            //    OnMessage?.Invoke(null, new HuoBiMessageReceivedEventArgs(msg));
+            //}
+            OnMessage?.Invoke(null, new HuoBiMessageReceivedEventArgs(msg));
 
         }
         #endregion
@@ -124,7 +143,19 @@ namespace Huobi.Market.WebSocketAPI
         }
         #endregion
 
+        public static void DisConnect()
+        {
+            IsHandClose = true;
+            websocket.Close();
+            //websocket.Dispose();
+            //websocket = null;
+            //IsHandClose = false;
+        }
 
+        public static void ReOpen()
+        {
+            websocket.Open();
+        }
     }
     public class HuoBiMessageReceivedEventArgs : EventArgs
     {
