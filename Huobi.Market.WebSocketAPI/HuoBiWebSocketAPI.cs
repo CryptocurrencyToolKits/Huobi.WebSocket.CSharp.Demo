@@ -143,19 +143,7 @@ namespace Huobi.Market.WebSocketAPI
         }
         #endregion
 
-        public static void DisConnect()
-        {
-            IsHandClose = true;
-            websocket.Close();
-            //websocket.Dispose();
-            //websocket = null;
-            //IsHandClose = false;
-        }
-
-        public static void ReOpen()
-        {
-            websocket.Open();
-        }
+   
     }
     public class HuoBiMessageReceivedEventArgs : EventArgs
     {
